@@ -2,7 +2,10 @@
 <body>
 <nav>
 <ul>
-<%if(data.login_stat) {%><li><a href="#" >My Account</li><%}else{%>
+<%if(data.loginStat) {%>
+<li><a href="#" >My Account</li>
+<li><a href="/logout" >Logout</li>
+<%}else{%>
 <li><a href="/login" >Login</a></li>
 <li><a href="/sign-up" >Sign Up</a></li>
 <%}%>

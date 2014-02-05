@@ -23,14 +23,15 @@ app.use('/public', express.static(__dirname + '/public'));
 
 app.all('*', function(req, res, next){//to execute before all routing
     res.locals.loginStat=false;
-    if(req.session.userEmail){
+    if(req.session.email){
+        //console.log(req.session.email);
         res.locals.loginStat=true;
     }
     next();
 });
 
 app.get('/', function(req, res){
-  res.render('index.ejs',{data:{"loginStat":res.locals.loginStat}}); 
+  res.render('index.ejs',{data:{"loginStat":res.locals.loginStat}});  
 });
 
 app.get('/dashboard', function(req, res){
@@ -43,17 +44,25 @@ app.get('/dashboard', function(req, res){
 });
 
 app.get('/login',function (req,res){
-    if(req.session.userEmail){
+    if(req.session.email){
         res.writeHead(301,{Location: '/dashboard'});
         res.end();
-    }else{
+    }else{     
           res.render('login.ejs',{"data":{"":""}}); 
     }
 })
 
+app.get('/logout',function (req,res){
+    if(req.session.email){
+        req.session.email=null;
+//        console.log('logout clicked');
+        res.writeHead(301,{Location: '/'});
+        res.end();
+    }
+})
 app.post('/login',function (req, res){
-    if (req.session.userEmail) {
-        res.writeHead(301, {Location: '/dahboard'});
+    if (req.session.email) {
+        res.writeHead(301, {Location: '/dashboard'});
         res.end();
     } else {
         if (req.body.submit) {
@@ -68,18 +77,22 @@ app.post('/login',function (req, res){
 //        console.log(sql);
                 connection.query(sql, function(err, rows) {
 
-                    if (err != null) {
-                        console.log('no data found')
-                    } else {                      //set user session
-                        Fname = rows[0].Fname;
-                        Fname = rows[0].Email;
-                        console.log(Fname);
+                    if (err != null ) {
+                       console.log('no data found')
+                    }else if(typeof  rows[0]==='undefined') {
+                       res.render('login.ejs',{"data":{"errors":{"Login Error":"Login credential Mismatch"}}});
+                    } else {                      //set user session                        
+                        var Fname = rows[0].Fname;
+                        var Email = rows[0].Email; 
 
                         req.session.uid = Fname;
                         req.session.email = Email;
+                        res.writeHead(301, {Location: '/dashboard'});
+                        res.end();
                     }
                 })
             }else{
+                
             res.render('login.ejs',{"data":{"errors":{'username':'required','password':'required'}}});
         }
            
