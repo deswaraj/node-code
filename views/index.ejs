@@ -1,0 +1,12 @@
+<% include header %>
+<body>
+<nav>
+<ul>
+<%if(data.login_stat) {%><li><a href="#" >My Account</li><%}else{%>
+<li><a href="/login" >Login</a></li>
+<li><a href="/sign-up" >Sign Up</a></li>
+<%}%>
+</ul>
+</nav>
+</body>
+<% include footer %>

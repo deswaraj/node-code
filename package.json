@@ -1,0 +1,21 @@
+{
+    "name": "node-code",
+    "description": "essential code snippets",
+    "version": "0.0.1",
+    "main": "./node-code.js",
+    "author": {
+        "name": "Swaraj De",
+        "email": "swaraj_de@yahoo.com"
+    },
+    "keywords": [],
+    "licenses": {
+        "type": "mit"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/YOUR_LOGIN/node-code.git"
+    },
+    "bugs": {
+        "url": "http://github.com/YOUR_LOGIN/node-code/issues"
+    }
+}

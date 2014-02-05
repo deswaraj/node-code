@@ -1,0 +1,20 @@
+<% include header %>
+
+<body>
+<nav>
+<ul>
+<%if(data.login_stat) {%><li><a href="#" >My Account</li><%}else{%>
+<li><a href="/login" >Login</a></li>
+<li><a href="/sign-up" >Sign Up</a></li>
+<%}%>
+</ul>
+</nav>
+
+<form action="" method="post" >
+<input type="text" name="username" placeholder="User Email" />
+<input type="password" name="password" placeholder="Password" />
+<input type="submit" name="submit" value=login />
+</form>
+
+</body>
+<% include footer %>
