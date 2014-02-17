@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+<title>Image aCrop</title>
+<link href="public/css/jquery-ui-1.10.3.custom.min.css" rel="Stylesheet" type="text/css" /> 
+<link rel="stylesheet" href="public/css/style.css" type="text/css" media="screen" />
+<link href="public/css/jquery.cropzoom.css" rel="Stylesheet" type="text/css" /> 
+<link type="text/css" href="public/css/jquery.jscrollpane.css" rel="stylesheet" media="all" />
+
+<script type="text/javascript" src="public/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="public/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="public/js/jquery.cropzoom.js"></script>
+
+<script type="text/javascript" src="public/js/jquery.jscrollpane.min.js"></script>
+	 
+	<script type="text/javascript">
+	var selector_width =250;
+	var selector_height =110;
+	var image_width =800;
+	var image_height =600;
+	var start_zoom =90;
+	var main_width	= $(window).width();
+    $(document).ready(function(){
+       var cropzoom = $('#crop_container').cropzoom({
+            width:(image_width*start_zoom)/100,
+            height:(image_height*start_zoom)/100,
+            bgColor: '#fff',
+            enableRotation:false,
+            enableZoom:true,
+            zoomSteps:10,
+            rotationSteps:10,
+			expose:{
+                slidersOrientation: 'horizontal',
+                zoomElement: '#zoom',
+                rotationElement: '#rot',
+                elementMovement:'#movement'
+            },
+            selector:{        
+			  w:selector_width,
+			  h:selector_height,
+              centered:true,
+			  infoFontSize:0,
+              borderColor:'#000',
+              borderColorHover:'yellow',
+              startWithOverlay: false,
+              hideOverlayOnDragAndResize: true,
+			  onSelectorResize: (function(sel,obj){
+				$('#w').html(obj['w']);
+				$('#h').html(obj['h']);
+				
+			  })
+            },
+            image:{
+                source:'public/images/1.jpg',
+                width:image_width,
+                height:image_height,
+                minZoom:30,
+                maxZoom:150,
+				startZoom:start_zoom,
+				onZoom:(function(sel,obj){
+					var original_width 	= $('#original_width').val();
+					var current_width	= $('#k').find('img.ui-draggable').width();
+					var percent			= Math.round((current_width/original_width)*100);
+					$('#percent').html(percent+'%');
+					
+					if( percent > 100 ) {
+						$('.jspVerticalBar').css({'visibility':'visible'});
+						$('.jspHorizontalBar').css({'visibility':'visible'});
+					}else {
+						$('.jspVerticalBar').css({'visibility':'hidden'});
+						$('.jspHorizontalBar').css({'visibility':'hidden'});
+					}
+				})
+            }
+        });
+        cropzoom.setSelector(45,45,200,150,true);
+        $('#crop').click(function(){ 
+			$('.result').find('.txt').hide().end().append('<span id="loading">Loading...</span>');
+            cropzoom.send('resize','POST',{},function(rta){
+                $('.result').find('img').remove();
+                var img = $('<img />').attr('src',rta);
+                $('.result').find('.txt').hide().end().append(img);
+				$('#loading').remove();
+            });
+        });
+        $('#restore').click(function(){
+            $('.result').find('img').remove();
+            $('.result').find('.txt').show();
+			$('#loading').remove();
+            cropzoom.restore();
+			
+			$('#percent').html('100%');
+			$('#w').html(selector_width);
+			$('#h').html(selector_height);
+        });
+		$('#wrap').jScrollPane();	
+    });
+</script>
+<style>
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+	<div id="crop_container"></div>
+	<div class="cleared"></div>
+</div>
+<span id="percent">100%</span>
+
+
+
+<div class="controlls">
+
+<span class="button-wrapper" id="size">
+	Width:<span id="w">250</span>
+	Height:<span id="h">110</span>
+	</span>
+	<div id="image_bar">
+	<div id="zoom"></div>
+	<div class="cleared"></div>
+	<div id="rot"></div>
+	<div class="cleared"></div>
+	<div id="movement" style="display:none;"></div>
+	</div>
+	<div id="buttons">
+		<span class="button-wrapper" id="crop">
+		<span class="l"> </span>
+		<span class="r"> </span>
+		<a class="button" href="javascript:void(0)">Crop</a>
+		</span>
+
+		<span class="button-wrapper" id="restore">
+		<span class="l"> </span>
+		<span class="r"> </span>
+		<a class="button" href="javascript:void(0)">Restore</a>
+		</span>
+	</div>
+	<div class="cleared"></div>
+</div>
+<div class="result">
+<div class="txt">Here you will see the cropped image</div>
+<div class="cleared"></div>
+</div> 
+
+<input type="hidden" id="original_width" />
+<input type="hidden" id="original_height" />
+<script>
+ var zoomInPx_width = ((image_width * Math.abs(start_zoom)) / 100);
+var zoomInPx_height = ((image_height * Math.abs(start_zoom)) / 100);
+$('#original_width').val(zoomInPx_width);
+$('#original_height').val(zoomInPx_height);
+</script>
+</body>
+</html>

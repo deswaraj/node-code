@@ -1,0 +1,48 @@
+<% include header %>
+
+<body>
+<nav>
+<ul>
+<%if(data.login_stat) {%><li><a href="#" >My Account</li><%}else{%>
+
+
+<%}%>
+</ul>
+</nav>
+
+<form action="" method="post" >
+<div id="message" class="message">
+<div id="e-msg" style="background-color:red">
+<% if(typeof data.errors !== 'undefined'){ %>
+
+errors=<%- JSON.stringify(data.errors)%>;
+
+<% } else  %>
+</div>
+<div id="s-msg"></div>
+</div>
+
+<label for="useremail">First Name</label>
+<input type="text" name="firstName" id="firstName" placeholder="First Name" /><br />
+
+<label for="useremail">Last Name</label>
+<input type="text" name="lastName" id="lastName" placeholder="Last Name" /><br />
+
+<label for="useremail">E-mail</label>
+<input type="text" name="useremail" id="useremail" placeholder="User Email" /><br />
+
+<label for="password">Password</label>
+<input type="password" name="password" id="password" placeholder="Password" /><br />
+
+<!--
+<label for="confPassword">Confirm Password</label>
+<input type="password" name="confPassword" id="confPassword" placeholder="Reenter Password" /><br />
+-->
+
+<label for="profileImage">Profile Image</label>
+<input type="file" name="profileImage" id="profileImage" /><br />
+<input type="submit" name="submit" value=Register />
+</form>
+
+</body>
+<% include footer %>
